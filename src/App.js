@@ -51,6 +51,7 @@ class App extends Component {
       _article = <CreateContent onSubmit={function(_title,_desc){
         //setState로 새로운 content 원소 추가
         this.max_content_id = this.max_content_id + 1;
+        // push는 원본을 수정해서 별로 좋은 방법은 아님 concat 사용하는걸 추천
         // this.state.contents.push(
         //   {id:this.max_content_id, title:_title, desc:_desc}
         // );
@@ -82,7 +83,6 @@ class App extends Component {
               selected_content_id: Number(id)
             });
           }.bind(this)}
-          data = {this.state.contents}
         ></TOC>
         <Control onChangeMode={function(_mode){
           this.setState({mode:_mode});
