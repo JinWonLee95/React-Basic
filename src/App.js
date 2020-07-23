@@ -62,6 +62,7 @@ class App extends Component {
 
         // concat처럼 복사해서 새로운 Array로 만들어 사용
         // Objcet.assign({},옮길 Object) 도 같은 기능
+        // 이렇게 immutable 사용(원본을 바꾸지 않고 복제해서 그것을 사용) 검색해서 더 알기
         var newContents = Array.from(this.state.contents);
         newContents.push({id:this.max_content_id, title:_title, desc:_desc});
         this.setState({
