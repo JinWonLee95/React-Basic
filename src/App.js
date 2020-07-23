@@ -49,17 +49,23 @@ class App extends Component {
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>
     }else if(this.state.mode === 'create'){
       _article = <CreateContent onSubmit={function(_title,_desc){
-        //setState로 새로운 content 원소 추가
+        // setState로 새로운 content 원소 추가
         this.max_content_id = this.max_content_id + 1;
+
         // push는 원본을 수정해서 별로 좋은 방법은 아님 concat 사용하는걸 추천
         // this.state.contents.push(
         //   {id:this.max_content_id, title:_title, desc:_desc}
         // );
-        var _contents = this.state.contents.concat(
-          {id:this.max_content_id, title:_title, desc:_desc}
-        );
+        // var _contents = this.state.contents.concat(
+        //   {id:this.max_content_id, title:_title, desc:_desc}
+        // );
+
+        // concat처럼 복사해서 새로운 Array로 만들어 사용
+        // Objcet.assign({},옮길 Object) 도 같은 기능
+        var newContents = Array.from(this.state.contents);
+        newContents.push({id:this.max_content_id, title:_title, desc:_desc});
         this.setState({
-          contents: _contents
+          contents: newContents
         });
         console.log(_title, _desc);
       }.bind(this)}></CreateContent>
