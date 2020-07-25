@@ -5,6 +5,8 @@ import Subject from "./components/Subject";
 import Control from "./components/Control";
 import './App.css';
 import CreateContent from './components/CreateContent';
+import UpdateContent from './components/UpdateContent';
+
 // import { configure } from '@testing-library/react';
 
 //상위 -> 하위는 props 사용 하위 -> 상위는 event 사용
@@ -26,28 +28,30 @@ class App extends Component {
       ]
     }
   }
+  getReadContent(){
+    var i=0;
+    while (i < this.state.contents.length){
+      var data = this.state.contents[i];
+      if(data.id === this.state.selected_content_id){
+        return data;
+      }
+      i = i+1;
+    }
+  }
 
-  //props나 state가 바뀌면 render가 다시 호출된다(화면이 새로고침된다)
-  render() {
+  getContent(){
     console.log('App render');
     var _title, _desc, _article = null;
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
       _article = <ReadContent title={_title} desc={_desc}></ReadContent>
-    }else if(this.state.mode === 'read'){
-      var i=0;
-      while (i < this.state.contents.length){
-        var data = this.state.contents[i];
-        if(data.id === this.state.selected_content_id){
-          _title = data.title;
-          _desc = data.desc;
-          break;
-        }
-        i = i+1;
-      }
-      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
-    }else if(this.state.mode === 'create'){
+    }
+    else if(this.state.mode === 'read'){
+      var _content = this.getReadContent();
+      _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>
+    }
+    else if(this.state.mode === 'create'){
       _article = <CreateContent onSubmit={function(_title,_desc){
         // setState로 새로운 content 원소 추가
         this.max_content_id = this.max_content_id + 1;
@@ -71,6 +75,32 @@ class App extends Component {
         console.log(_title, _desc);
       }.bind(this)}></CreateContent>
     }
+    else if(this.state.mode === 'update'){
+      _content = this.getReadContent();
+      _article = <UpdateContent data={_content} onSubmit={
+          function(_id, _title, _desc){
+            var _contents = Array.from(this.state.contents);
+            var i =0;
+
+            while(i < _contents.length){
+              if(_contents[i].id === _id){
+                _contents[i] = {id : _id, title:_title, desc:_desc};
+                break;
+              }
+              i = i+1;
+            }
+            this.setState({
+              contents: _contents
+          });
+          console.log(_title, _desc);
+      }.bind(this)}></UpdateContent>
+    }
+
+    return _article;
+  }
+
+  //props나 state가 바뀌면 render가 다시 호출된다(화면이 새로고침된다)
+  render() {
     return (
       <div className="App">
         <Subject
@@ -94,7 +124,7 @@ class App extends Component {
         <Control onChangeMode={function(_mode){
           this.setState({mode:_mode});
         }.bind(this)}></Control>
-        {_article}
+        {this.getContent()}
       </div>
     );
   }
