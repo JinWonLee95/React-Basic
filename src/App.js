@@ -56,10 +56,12 @@ class App extends Component {
         // setState로 새로운 content 원소 추가
         this.max_content_id = this.max_content_id + 1;
 
-        // push는 원본을 수정해서 별로 좋은 방법은 아님 concat 사용하는걸 추천
+        // push는 원본을 수정해서 별로 좋은 방법은 아님
         // this.state.contents.push(
         //   {id:this.max_content_id, title:_title, desc:_desc}
         // );
+
+        // 원본을 복사해서 사용하는 concat 사용 추천
         // var _contents = this.state.contents.concat(
         //   {id:this.max_content_id, title:_title, desc:_desc}
         // );
@@ -70,9 +72,10 @@ class App extends Component {
         var newContents = Array.from(this.state.contents);
         newContents.push({id:this.max_content_id, title:_title, desc:_desc});
         this.setState({
-          contents: newContents
+          contents: newContents,
+          mode: 'read',
+          selected_content_id : this.max_content_id
         });
-        console.log(_title, _desc);
       }.bind(this)}></CreateContent>
     }
     else if(this.state.mode === 'update'){
@@ -90,7 +93,8 @@ class App extends Component {
               i = i+1;
             }
             this.setState({
-              contents: _contents
+              contents: _contents,
+              mode : "read"
           });
           console.log(_title, _desc);
       }.bind(this)}></UpdateContent>
